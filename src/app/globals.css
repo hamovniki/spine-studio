@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  color-scheme: light;
+  --background: #f1f3ec;
+  --surface: #f9faf5;
+  --surface-raised: #ffffff;
+  --panel: #f4f6ef;
+  --border: #dce0d4;
+  --border-strong: #c4cbb8;
+  --foreground: #171a12;
+  --muted: #6f7867;
+  --muted-strong: #4f5947;
+  --accent: #5f7f00;
+  --accent-strong: #496300;
+  --accent-foreground: #ffffff;
+  --accent-soft: #e8efce;
+  --ring: #7d9e0b;
+  --danger: #b42318;
+  --danger-soft: #fee4e2;
+  --shadow-color: 24, 32, 12;
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #080a0c;
+  --surface: #0c0f13;
+  --surface-raised: #11151a;
+  --panel: #0e1216;
+  --border: #22282f;
+  --border-strong: #333c46;
+  --foreground: #f1f3ea;
+  --muted: #899287;
+  --muted-strong: #b4bdaf;
+  --accent: #c8f36a;
+  --accent-strong: #dcff8e;
+  --accent-foreground: #101507;
+  --accent-soft: rgba(200, 243, 106, 0.1);
+  --ring: #c8f36a;
+  --danger: #ff7c72;
+  --danger-soft: rgba(255, 124, 114, 0.12);
+  --shadow-color: 0, 0, 0;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-panel: var(--panel);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-ring: var(--ring);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  border-color: var(--border);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+    background-color: var(--border-strong);
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stage-grid {
+    background-image:
+      radial-gradient(
+        circle at 1px 1px,
+        rgba(255, 255, 255, 0.075) 1px,
+        transparent 0
+      ),
+      radial-gradient(
+        circle at 1px 1px,
+        rgba(255, 255, 255, 0.035) 1px,
+        transparent 0
+      );
+    background-position:
+      0 0,
+      12px 12px;
+    background-size:
+      24px 24px,
+      24px 24px;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  .animate-fade-up {
+    animation: fade-up 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 300ms ease-out both;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 2.4s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin 2.4s linear infinite;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
