@@ -2,7 +2,7 @@ meta:
   environment: nodejs
   toolchain:
     name: pnpm
-    version: 20
+    version: 24
 build:
   skip: false
   additionalCommands: pnpm run build
