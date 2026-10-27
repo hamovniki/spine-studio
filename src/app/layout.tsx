@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description:
     'A local-first Spine animation viewer and debugger for Spine 3.8 and 4.2/4.3 exports.',
 };
-
+// metrica
 const yandexMetricaId = Number(process.env.NEXT_PUBLIC_YANDEX_METRICA_ID);
 
 export default function RootLayout({children}: {children: ReactNode}) {
