@@ -2,6 +2,8 @@
 
 import {
   AudioLines,
+  Check,
+  Copy,
   Gauge,
   Layers,
   Pause,
@@ -9,8 +11,9 @@ import {
   Repeat2,
   Search,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { generateAnimationsCode } from "@/lib/generate-animations-code";
 import { cn, formatDuration } from "@/lib/utils";
 import { useViewerStore } from "@/store/viewer-store";
 
@@ -59,6 +62,33 @@ export function AnimationsTab() {
       animation.name.toLowerCase().includes(search),
     );
   }, [animations, query]);
+
+  const [copyState, setCopyState] = useState<"idle" | "copied" | "error">(
+    "idle",
+  );
+  const copyResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (copyResetTimer.current) clearTimeout(copyResetTimer.current);
+    };
+  }, []);
+
+  const copyAnimationsCode = async () => {
+    if (!character || animations.length === 0) return;
+
+    try {
+      await navigator.clipboard.writeText(
+        generateAnimationsCode(character.name, animations),
+      );
+      setCopyState("copied");
+    } catch {
+      setCopyState("error");
+    }
+
+    if (copyResetTimer.current) clearTimeout(copyResetTimer.current);
+    copyResetTimer.current = setTimeout(() => setCopyState("idle"), 2000);
+  };
 
   return (
     <div className="space-y-3 p-3">
@@ -150,13 +180,47 @@ export function AnimationsTab() {
         />
       </div>
 
-      <div className="flex items-center justify-between px-0.5">
+      <div className="flex items-center justify-between gap-2 px-0.5">
         <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted">
           Animations
         </span>
-        <span className="font-mono text-[9px] text-muted">
-          {filtered.length}/{animations.length}
-        </span>
+
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[9px] text-muted">
+            {filtered.length}/{animations.length}
+          </span>
+
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={copyAnimationsCode}
+            disabled={animations.length === 0}
+            aria-label="Copy animations as a JS variable"
+            title={
+              animations.length === 0
+                ? "Load a skeleton to copy its animations"
+                : "Copy animations as a JS variable"
+            }
+            className={cn(
+              "h-7 gap-1.5 px-2 text-[10px]",
+              copyState === "copied" && "text-accent",
+              copyState === "error" && "text-danger",
+            )}
+          >
+            {copyState === "copied" ? (
+              <Check className="h-3 w-3" />
+            ) : (
+              <Copy className="h-3 w-3" />
+            )}
+            <span aria-live="polite">
+              {copyState === "copied"
+                ? "Copied!"
+                : copyState === "error"
+                  ? "Copy failed"
+                  : "Copy as JS variable"}
+            </span>
+          </Button>
+        </div>
       </div>
 
       <div className="space-y-1">
